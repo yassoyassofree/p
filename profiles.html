@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles - Apple Profile Downloader</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .profile-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .profile-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            color: #1a1a1a;
+        }
+        .profile-desc {
+            color: #666;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .profile-meta {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 15px;
+        }
+        
+        .profile-category {
+            font-size: 0.85rem;
+            color: #666;
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        
+        .download-btn {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-header {
+            grid-column: 1 / -1;
+            margin: 20px 0 10px;
+            color: #333;
+            font-size: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .no-profiles {
+            text-align: center;
+            color: #666;
+            padding: 40px 0;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar" id="navbar">
+        <a href="index.html" class="logo">Apple Profiles</a>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="profiles.html" class="active"><i class="fas fa-user-circle"></i> Profiles</a>
+        <a href="#"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Available Profiles</h1>
+            <div class="profile-grid" id="profileGrid">
+                <!-- Profile cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local profiles data
+        const appleProfiles = [
+            {
+                id: '1',
+                name: 'AI Assistant Pro',
+                description: 'Access to advanced AI features and tools',
+                icon: '🤖',
+                filename: 'ai-profile.mobileconfig',
+                category: 'AI Tools'
+            },
+            {
+                id: '2',
+                name: 'App Portal',
+                description: 'Direct access to premium applications',
+                icon: '🚀',
+                filename: 'app-portal.mobileconfig',
+                category: 'App Access'
+            },
+            {
+                id: '3',
+                name: 'Secure Connect',
+                description: 'Secure connection to private networks',
+                icon: '🔒',
+                filename: 'secure-connect.mobileconfig',
+                category: 'Security'
+            }
+        ];
+
+        // Function to create profile card
+        function createProfileCard(profile) {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            
+            card.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-icon">${profile.icon}</div>
+                    <h3 class="profile-name">${profile.name}</h3>
+                </div>
+                <p class="profile-desc">${profile.description}</p>
+                <div class="profile-meta">
+                    <span class="profile-category">${profile.category}</span>
+                    <button class="download-btn" data-filename="${profile.filename}">
+                        <i class="fas fa-download"></i> Install Profile
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Function to toggle mobile menu
+        function toggleMenu() {
+            const navbar = document.getElementById('navbar');
+            if (navbar.className === 'navbar') {
+                navbar.className += ' responsive';
+            } else {
+                navbar.className = 'navbar';
+            }
+        }
+
+        // Function to handle profile download
+        function handleDownload(event) {
+            if (event.target.closest('.download-btn')) {
+                const button = event.target.closest('.download-btn');
+                const filename = button.getAttribute('data-filename');
+                
+                if (filename) {
+                    // Create a temporary link to trigger the download
+                    const link = document.createElement('a');
+                    link.href = `profiles/${filename}`;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Show installation instructions
+                    alert('Profile downloaded! To install it, open the file and follow the on-screen instructions.');
+                }
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileGrid = document.getElementById('profileGrid');
+            
+            // Add click event listener to the grid for download buttons
+            profileGrid.addEventListener('click', handleDownload);
+            
+            if (appleProfiles.length === 0) {
+                profileGrid.innerHTML = `
+                    <div class="no-profiles">
+                        <i class="fas fa-folder-open" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>No profiles available</h3>
+                        <p>Check back later for new profiles.</p>
+                    </div>
+                `;
+            } else {
+                // Group profiles by category
+                const categories = {};
+                appleProfiles.forEach(profile => {
+                    if (!categories[profile.category]) {
+                        categories[profile.category] = [];
+                    }
+                    categories[profile.category].push(profile);
+                });
+                
+                // Display profiles by category
+                for (const [category, profiles] of Object.entries(categories)) {
+                    const categoryHeader = document.createElement('h2');
+                    categoryHeader.className = 'category-header';
+                    categoryHeader.textContent = category;
+                    profileGrid.appendChild(categoryHeader);
+                    
+                    profiles.forEach(profile => {
+                        profileGrid.appendChild(createProfileCard(profile));
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

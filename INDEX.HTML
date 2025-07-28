@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Profile Downloader</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+        .profile-list {
+            list-style: none;
+            padding: 0;
+        }
+        .profile-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .profile-item:hover {
+            background-color: #f8f9fa;
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .download-btn {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar" id="navbar">
+        <a href="index.html" class="logo">Apple Profiles</a>
+        <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="profiles.html"><i class="fas fa-user-circle"></i> Profiles</a>
+        <a href="#"><i class="fas fa-info-circle"></i> About</a>
+        <a href="#" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+        <h1>Apple Profile Downloader</h1>
+        <ul class="profile-list" id="profileList">
+            <!-- Profiles will be dynamically inserted here -->
+        </ul>
+    </div>
+
+    <script>
+        // Sample Apple profiles data
+        const appleProfiles = [
+            {
+                id: '1',
+                name: 'iOS Developer',
+                description: 'Profile for iOS development',
+                icon: '📱',
+                url: 'https://developer.apple.com/download/more/?name=iOS'
+            },
+            {
+                id: '2',
+                name: 'macOS Developer',
+                description: 'Profile for macOS development',
+                icon: '💻',
+                url: 'https://developer.apple.com/download/more/?name=macOS'
+            },
+            {
+                id: '3',
+                name: 'Xcode',
+                description: 'Latest Xcode version',
+                icon: '🛠️',
+                url: 'https://developer.apple.com/download/more/?name=Xcode'
+            }
+        ];
+
+        // Function to create profile item
+        function createProfileItem(profile) {
+            const item = document.createElement('li');
+            item.className = 'profile-item';
+            item.innerHTML = `
+                <div class="profile-icon">${profile.icon}</div>
+                <div class="profile-info">
+                    <h3>${profile.name}</h3>
+                    <p>${profile.description}</p>
+                </div>
+                <button class="download-btn" onclick="downloadProfile('${profile.url}')">Download</button>
+            `;
+            return item;
+        }
+
+        // Function to download profile
+        function downloadProfile(url) {
+            window.open(url, '_blank');
+        }
+
+        // Initialize
+        const profileList = document.getElementById('profileList');
+        appleProfiles.forEach(profile => {
+            profileList.appendChild(createProfileItem(profile));
+        });
+    </script>
+</body>
+</html>
